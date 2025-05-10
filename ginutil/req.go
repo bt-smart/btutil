@@ -31,6 +31,7 @@ func GetIDFormParam(c *gin.Context) uint64 {
 	return id
 }
 
+// GetQueryUint64ByString 获取gin查询参数中的uint64类型的参数
 func GetQueryUint64ByString(c *gin.Context, query string) uint64 {
 	str := c.Query(query)
 	if str == "" {
