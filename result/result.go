@@ -11,6 +11,11 @@ type Response struct {
 	Data any `json:"data"`
 }
 
+type PageData[T any] struct {
+	List  []T   `json:"list"`
+	Total int64 `json:"total"`
+}
+
 func Ok() *Response {
 	return &Response{Code: 0, Msg: "", Data: nil}
 }
