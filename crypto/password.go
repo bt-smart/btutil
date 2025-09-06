@@ -3,7 +3,7 @@ package crypto
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/bt-smart/util/strutil"
+	"github.com/bt-smart/btutil/strutil"
 )
 
 // GetPasswordAndSalt 获取密码和盐
