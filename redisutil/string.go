@@ -1,4 +1,4 @@
-package btredis
+package redisutil
 
 import (
 	"context"
