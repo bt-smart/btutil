@@ -11,7 +11,7 @@ import (
 // Response 封装响应
 type Response struct {
 	StatusCode int
-	Body       string
+	Body       []byte
 }
 
 // Client HTTP 客户端
@@ -81,6 +81,6 @@ func handleResponse(resp *http.Response) (*Response, error) {
 
 	return &Response{
 		StatusCode: resp.StatusCode,
-		Body:       string(body),
+		Body:       body,
 	}, nil
 }
