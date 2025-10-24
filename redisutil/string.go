@@ -3,6 +3,7 @@ package redisutil
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -14,7 +15,11 @@ func SetString(c *redis.Client, ctx context.Context, key string, value interface
 
 // GetString 获取字符串值
 func GetString(c *redis.Client, ctx context.Context, key string) (string, error) {
-	return c.Get(ctx, key).Result()
+	val, err := c.Get(ctx, key).Result()
+	if errors.Is(err, redis.Nil) {
+		return "", nil
+	}
+	return val, err
 }
 
 // DelKey 删除键
@@ -35,7 +40,11 @@ func Expire(c *redis.Client, ctx context.Context, key string, expiration time.Du
 
 // GetUint64 获取无符号64位整数值
 func GetUint64(c *redis.Client, ctx context.Context, key string) (uint64, error) {
-	return c.Do(ctx, "GET", key).Uint64()
+	val, err := c.Do(ctx, "GET", key).Uint64()
+	if errors.Is(err, redis.Nil) {
+		return 0, nil
+	}
+	return val, err
 }
 
 // SetStruct 将结构体序列化为JSON存储到Redis
@@ -50,8 +59,15 @@ func SetStruct(c *redis.Client, ctx context.Context, key string, value interface
 // GetStruct 从Redis获取JSON并反序列化到结构体
 func GetStruct(c *redis.Client, ctx context.Context, key string, dest interface{}) error {
 	data, err := c.Get(ctx, key).Result()
+	if errors.Is(err, redis.Nil) {
+		// key 不存在，不报错
+		return nil
+	}
 	if err != nil {
 		return err
+	}
+	if len(data) == 0 {
+		return nil
 	}
 	return json.Unmarshal([]byte(data), dest)
 }
